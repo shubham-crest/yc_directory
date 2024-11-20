@@ -17,7 +17,8 @@ const StartupForm = () => {
   const [pitch, setPitch] = useState("");
   const { toast } = useToast();
   const router = useRouter();
-  
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     try {
       const formValues = {
@@ -30,14 +31,14 @@ const StartupForm = () => {
       console.log("formValues", formValues);
       await formSchema.parseAsync(formValues);
       const result = await createPitch(prevState, formData, pitch);
-      console.log("result", result)
+      console.log("result", result);
 
       if (result.status === "SUCCESS") {
         toast({
           title: "Success",
           description: "Your startup pitch has benn created successfully",
         });
-      router.push(`/startup/${result._id}`);
+        router.push(`/startup/${result._id}`);
       }
       return result;
     } catch (error) {
@@ -64,6 +65,7 @@ const StartupForm = () => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, isPending] = useActionState(handleFormSubmit, {
     error: "",
     status: "INITIAL",
