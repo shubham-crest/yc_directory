@@ -7,14 +7,17 @@ export const formSchema = z.object({
   link: z
     .string()
     .url()
-    .refine(async (url) => {
-      try {
-        const res = await fetch(url, { method: "HEAD" });
-        const contentType = res.headers.get("content-type");
-        return contentType?.startsWith("image/");
-      } catch {
-        return false;
-      }
-    }),
+    .refine(
+      async (url) => {
+        try {
+          const res = await fetch(url, { method: "HEAD" });
+          const contentType = res.headers.get("content-type");
+          return contentType?.startsWith("image/");
+        } catch (errors) {
+          return false;
+        }
+      },
+      { message: "Failed to fetch image" }
+    ),
   pitch: z.string().min(10),
 });

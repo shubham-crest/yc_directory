@@ -28,21 +28,21 @@ const StartupForm = () => {
         link: formData.get("link") as string,
         pitch,
       };
-      console.log("formValues", formValues);
+
       await formSchema.parseAsync(formValues);
       const result = await createPitch(prevState, formData, pitch);
-      console.log("result", result);
 
       if (result.status === "SUCCESS") {
         toast({
           title: "Success",
-          description: "Your startup pitch has benn created successfully",
+          description: "Your startup pitch has been created successfully",
         });
         router.push(`/startup/${result._id}`);
       }
       return result;
     } catch (error) {
       if (error instanceof z.ZodError) {
+        const formFields = Object.fromEntries(formData);
         const fieldErrors = error.flatten().fieldErrors;
         setErrors(fieldErrors as unknown as Record<string, string>);
         toast({
@@ -50,7 +50,12 @@ const StartupForm = () => {
           description: "Please check your inputs and try again",
           variant: "destructive",
         });
-        return { ...prevState, error: "Validation failed", status: "ERROR" };
+        return {
+          ...prevState,
+          error: "Validation failed",
+          status: "ERROR",
+          formData: formFields,
+        };
       }
       toast({
         title: "Error",
@@ -83,6 +88,7 @@ const StartupForm = () => {
           className="startup-form_input"
           required
           placeholder="Startup Title"
+          defaultValue={state.formData?.title}
         />
         {errors.title && <p className="startup-form_error">{errors.title}</p>}
       </div>
@@ -97,6 +103,7 @@ const StartupForm = () => {
           className="startup-form_textarea"
           required
           placeholder="Startup Description"
+          defaultValue={state.formData?.description}
         />
         {errors.description && (
           <p className="startup-form_error">{errors.description}</p>
@@ -113,6 +120,7 @@ const StartupForm = () => {
           className="startup-form_input"
           required
           placeholder="Startup Category (Tech, Health, Education...)"
+          defaultValue={state.formData?.category}
         />
         {errors.category && (
           <p className="startup-form_error">{errors.category}</p>
@@ -129,6 +137,7 @@ const StartupForm = () => {
           className="startup-form_input"
           required
           placeholder="Startup Image URL"
+          defaultValue={state.formData?.link}
         />
         {errors.link && <p className="startup-form_error">{errors.link}</p>}
       </div>
