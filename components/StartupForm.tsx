@@ -17,6 +17,7 @@ const StartupForm = () => {
   const [pitch, setPitch] = useState("");
   const { toast } = useToast();
   const router = useRouter();
+  
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     try {
       const formValues = {
@@ -67,8 +68,6 @@ const StartupForm = () => {
     error: "",
     status: "INITIAL",
   });
-
-  console.log('useActionState state', state)
 
   return (
     <form action={formAction} className="startup-form">
